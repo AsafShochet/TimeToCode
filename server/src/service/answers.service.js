@@ -4,6 +4,8 @@
 import dbConnector from '../dal/db.connector';
 import scriptRunnerService from '../service/script.runner.service';
 import questionService from '../service/questions.service';
+import lintService from '../service/lint.service';
+import sourceCheckingService from '../service/source.checking.service';
 
 class AnswersService {
 
@@ -28,7 +30,7 @@ class AnswersService {
 		let randId = this.uuidv4();
 		// read file content
 		this.readFile(file)
-			.then((fileContent) => this.parseFileContentIntoAnswer(fileContent, question))
+			.then((fileContent) => this.checkAnswerBasedOnFileContent(fileContent, question))
 			.then((answerAnalysis) => {
 
 				let answerToSave = {
@@ -58,41 +60,6 @@ class AnswersService {
 		});
 	}
 
-	checkCopiedFrom(fileContent, questionId) {
-		return new Promise((resolve, reject) => {
-			let copiedFromResult = {
-				'google': {
-					matches: []
-				},
-				'internal': {
-					matches: [
-						{
-							studentId: 'id17',
-							matchPercentage: 85
-						}
-					]
-				}
-			};
-			resolve(copiedFromResult);
-		});
-	}
-
-	checkStyle(fileContent, styleRules) {
-		return new Promise((resolve, reject) => {
-			// running eslint here
-			let styleReport = {
-				'commentsPerLine': {
-					status: 'pass'
-				},
-				'meaningfullNames': {
-					status: "failed",
-					text: 'It is a bad practice to use variables named x1, x2, x3'
-				}
-			};
-			resolve(styleReport);
-		});
-	}
-
 	uuidv4() {
 		return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
 			var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
@@ -100,16 +67,16 @@ class AnswersService {
 		});
 	}
 
-	parseFileContentIntoAnswer(fileContent, question) {
+	checkAnswerBasedOnFileContent(fileContent, question) {
 		let answerAnalysis = {};
 		console.log(fileContent);
 		answerAnalysis.fileContent = fileContent;
 		return new Promise((resolve, reject) => {
 			scriptRunnerService.run(question.testCases, fileContent)
 				.then((testCaseResult) => answerAnalysis.testCaseResult = testCaseResult)
-				.then(() => this.checkStyle(question.styleRules, fileContent))
+				.then(() => lintService.runLint(fileContent, question.styleRules))
 				.then((styleResults) => answerAnalysis.styleResults = styleResults)
-				.then(() => this.checkCopiedFrom(question.sourcesToCheck, fileContent))
+				.then(() => sourceCheckingService.runSourceCheck(fileContent, question.sourcesToCheck))
 				.then((copiedFromResult) => answerAnalysis.copiedFromResult = copiedFromResult)
 				.then(() => resolve(answerAnalysis))
 				.catch((err) => {
