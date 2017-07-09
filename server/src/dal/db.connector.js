@@ -28,6 +28,20 @@ class DbConnector {
 		console.log('questions length: ', this._questions.length);
 		return this._questions;
 	}
+
+	getQuestion(questionId) {
+		let all = this.getQuestions();
+		all.forEach(function(question) {
+			if (question.id == questionId) {
+				console.log("question with id "+questionId+" found!!");
+				return question;
+			}
+		});
+		console.log("question with id "+questionId+" not found");
+		return {};
+	}
+
+
 }
 
 module.exports = new DbConnector();

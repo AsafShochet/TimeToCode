@@ -6,7 +6,6 @@ class ScriptRunnerService {
 
 	run(testCases, script, callback) {
 		let testCasesResults = [];
-		console.log("testCasestestCases", testCases);
 		console.log("testCases.length",testCases.length);
 		let numberOfCases = testCases.length;
 		let numberOfCasesDone = 0;
@@ -24,7 +23,7 @@ class ScriptRunnerService {
 
 			sb.run(script + " run(" + input + ");", function (output) {
 				console.log('input: ', input, 'output: ', output);
-				console.log("result: " + output.result + "\n");
+				console.log("result: " + output.result);
 				let testResult = {
 					"id": id
 				};

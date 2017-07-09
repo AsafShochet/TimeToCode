@@ -2,7 +2,6 @@
 import express from 'express';
 import questionsService from '../service/questions.service';
 import answersService from '../service/answers.service';
-import scriptRunnerService from '../service/script.runner.service';
 
 const router = express.Router();
 

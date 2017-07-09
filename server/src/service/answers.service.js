@@ -3,6 +3,7 @@
  */
 import dbConnector from '../dal/db.connector';
 import scriptRunnerService from '../service/script.runner.service';
+import questionService from '../service/questions.service';
 
 class AnswersService {
 
@@ -17,12 +18,16 @@ class AnswersService {
 	 * @returns {*}
 	 */
 	saveAnswer(answer, file) {
-		// read file content
-		let fileContent = this.readFile(file);
+
+		// get data regarding the question to test
 		let questionId = answer.questionId;
 		let testCases = this.getTestCases(questionId);
 		console.log("testCases", testCases);
+
+		// read file content
+		let fileContent = this.readFile(file);
 		let checkingResults = scriptRunnerService.run(testCases, fileContent, console.log);
+
 		let stylingResult = this.checkStyle(fileContent, questionId);
 		let copiedFromResult = this.checkCopiedFrom(fileContent, questionId);
 		let answerToSave = {
@@ -85,13 +90,18 @@ class AnswersService {
 	}
 
 	getTestCases(questionId) {
-		return [
-			{
-				"id": "AAAASS-XASD",
-				"input": "[1,2,3]",
-				"output": 6
-			}
-		]
+		let question = questionService.getQuestion(questionId);
+		if (question == {}) {
+			return [ //mockup!
+				{
+					"id": "AAAASS-XASD",
+					"input": "1,2,3",
+					"output": 6
+				}
+			]
+		}
+		return question.testCases;
+
 	}
 }
 
