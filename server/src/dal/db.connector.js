@@ -11,6 +11,7 @@ class DbConnector {
 	}
 
 	saveAnswer(answer) {
+		console.log("saving answer", JSON.stringify(answer));
 		this._answers.push(answer);
 	}
 
@@ -19,7 +20,7 @@ class DbConnector {
 	}
 
 	saveQuestion(question) {
-		console.log('adding a question '+ JSON.stringify(question));
+		console.log('adding a question ' + JSON.stringify(question));
 		this._questions.push(question);
 		console.log('questions length: ', this._questions.length);
 	}
@@ -31,17 +32,23 @@ class DbConnector {
 
 	getQuestion(questionId) {
 		let all = this.getQuestions();
-		all.forEach(function(question) {
+		all.forEach(function (question) {
 			if (question.id == questionId) {
-				console.log("question with id "+questionId+" found!!");
+				console.log("question with id " + questionId + " found!!");
 				return question;
 			}
 		});
-		console.log("question with id "+questionId+" not found");
-		return {};
+		console.log("question with id " + questionId + " not found, returning the mockup");
+		return 	{
+		 "testCases" :	[ //mockup!
+				{
+					"id": "AAAASS-XASD",
+					"input": "1,2,3",
+					"output": 6
+				}
+			]
+		}
 	}
-
-
 }
 
 module.exports = new DbConnector();
