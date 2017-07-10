@@ -12,16 +12,21 @@ body {
 }
 
 .table>thead>tr>th {
-	color: #fff;
+	color: #dadada;
 	font-weight: 400
 }
 
 .instructorApp {
-	padding: 70px 7%;
+	padding: 54px 7%;
 }
 
 .no-padding {
 	padding: 0;
+}
+
+.tests-case-area{
+	max-height: 440px;
+	overflow-y: auto;
 }
 
 .test-case-argument {
@@ -34,15 +39,56 @@ body {
 
 h3 {
 	padding-bottom: 8px;
-	color: #FFF;
+	color: #dadada;
 }
 
 label {
-	color: #FFF;
+	color: #dadada;
 	font-weight: 400;
 }
 
 input {
-	padding: 5px 2px;
-	color: #000;
+	padding: 5px 8px;
+	color: #fff;
+	background: rgb(64, 64, 66);
+	border: none;
+}
+
+textarea {
+	color: #fff;
+	background: rgb(64, 64, 66);
+	border: none;
+	resize: none;
+}
+
+.lint-setting-line {
+	height: 34px;
+	line-height: 34px;
+}
+
+.lint-setting-value-field {
+	max-width: 55px;
+	margin-left: 15px;
+	line-height: 0;
+}
+
+.lint-setting-label {
+	margin-left: 8px;
+}
+
+.toolbar {
+	height: 54px;
+	background: #131519;
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	z-index: 1;
+}
+
+.logo {
+	color: #fff;
+	line-height: 54px;
+	margin-left: 50px;
+	letter-spacing: 3px;
 }
