@@ -1,6 +1,7 @@
 import React from 'react';
 import RestService from './services/rest-service';
 import TestCase from './test-case';
+import LintSetting from './lint-settings';
 
 class InstructorApp extends React.Component {
 
@@ -10,7 +11,22 @@ class InstructorApp extends React.Component {
 			title: '123',
 			description: '4567',
 			testCaseList: [],
-			lintSettings: {},
+			lintSettings: {
+				requirejsdoc: {
+					enable: false,
+				},
+				maxLineLength: {
+					enable: false,
+					value: 0
+				},
+				maxStatementsInFunctionBlock: {
+					enable: false,
+					value: 0
+				},
+				indentationSpaces: {
+					enable: false
+				}
+			},
 			copyFromCheck: true
 		};
 
@@ -19,18 +35,21 @@ class InstructorApp extends React.Component {
 	}
 
 	onSubmitClick() {
-		const {title, description, testCaseList, lintSettings, copyFromCheck} = this.state;
-		return RestService.setNewQuestion({ title, description, testCases:testCaseList, lintSettings, copyFromCheck });
+		const { title, description, testCaseList, lintSettings, copyFromCheck } = this.state;
+		return RestService.setNewQuestion({ title, description, testCases: testCaseList, lintSettings, copyFromCheck });
 	};
 
 	render() {
 		return (
 			<div className="instructorApp">
-				<h3>Your task</h3>
+				<h3 className="row">Your task</h3>
 				{this.renderTitle()}
 				{this.renderDescriptionArea()}
 				<TestCase
 					testCaseList={this.state.testCaseList}
+				/>
+				<LintSetting
+					lintSettings={this.state.lintSettings}
 				/>
 				<br/>
 				<button onClick={() => this.onSubmitClick()}>Submit</button>
