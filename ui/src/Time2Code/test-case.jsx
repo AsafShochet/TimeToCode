@@ -9,12 +9,13 @@ class TestCase extends React.Component {
 		this.updateTestCaseField = this.updateTestCaseField.bind(this);
 		this.updateTestCaseArgument = this.updateTestCaseArgument.bind(this);
 		this.addTestCaseArgument = this.addTestCaseArgument.bind(this);
+		this.removeTestCaseArgument = this.removeTestCaseArgument.bind(this);
 	}
 
 	render() {
 		return (
-			<div className="tests-case-area">
-				<label>Test cases</label>
+			<div className="tests-case-area row">
+				<h3>Test cases</h3>
 				{this.renderTestCasesTable()}
 				{this.renderAddTestCase()}
 			</div>
@@ -38,16 +39,18 @@ class TestCase extends React.Component {
 				<tbody>
 				{testCaseList.map((testCase, index) => (
 					<tr>
-						<th scope="row">{index}</th>
+						<th scope="row">{index + 1}</th>
 						<td>{this.renderTestCaseArguments(testCase)}</td>
 						<td>
 							<input
-							value={testCase.expectedOutput}
-							onChange={e => this.updateTestCaseField(testCase, e.target.value, 'expectedOutput')}
-						/>
+								value={testCase.expectedOutput}
+								onChange={e => this.updateTestCaseField(testCase, e.target.value, 'expectedOutput')}
+							/>
 						</td>
 						<td>
 							<input
+								type="number"
+								style={{maxWidth: '55px'}}
 								value={testCase.score}
 								onChange={e => this.updateTestCaseField(testCase, e.target.value, 'score')}
 							/>
@@ -60,8 +63,8 @@ class TestCase extends React.Component {
 						</td>
 						<td>
 							<button
-								className="btn"
-							    onClick={() => this.removeTestCase(index)}
+								className="btn btn-link"
+								onClick={() => this.removeTestCase(index)}
 							>
 								Remove test
 							</button>
@@ -85,16 +88,17 @@ class TestCase extends React.Component {
 
 	renderTestCaseArguments(testCase) {
 		return (
-			<div className="test-case-arguments" style={{ display: 'inline-block' }}>
+			<div className="test-case-arguments no-padding">
 				{testCase.arguments.map((arg, index) => (
-					<div className="test-case-argument">
+					<div className="test-case-argument no-padding">
 						<input value={arg}
 						       onChange={e => this.updateTestCaseArgument(testCase, index, e.target.value)}
 						/>
+						{this.renderRemoveArgumentButton(testCase, index)}
 					</div>
 				))}
 				<button
-					className='add-test-case-argument btn'
+					className='add-test-case-argument btn btn-link'
 					onClick={() => this.addTestCaseArgument(testCase)}>
 					&#43; New argument
 				</button>
@@ -102,8 +106,24 @@ class TestCase extends React.Component {
 		)
 	}
 
+	renderRemoveArgumentButton(testCase, index) {
+		if (testCase.arguments.length < 2) {
+			return null;
+		}
+		return (
+			<button
+				className="btn btn-link"
+				onClick={()=>this.removeTestCaseArgument(testCase, index)}
+			>
+
+				Remove
+			</button>
+		)
+	}
+
 	addTestCase() {
 		const newTestCase = {
+			title: '',
 			arguments: [''],
 			expectedOutput: '',
 			score: 0,
@@ -134,6 +154,11 @@ class TestCase extends React.Component {
 
 	addTestCaseArgument(testCase) {
 		testCase.arguments.push('');
+		this.forceUpdate();
+	}
+
+	removeTestCaseArgument(testCase, index) {
+		testCase.arguments.splice(index, 1);
 		this.forceUpdate();
 	}
 

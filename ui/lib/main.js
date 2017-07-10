@@ -261,17 +261,23 @@
 				return _react2['default'].createElement(
 					'div',
 					{ className: 'instructorApp' },
+					_react2['default'].createElement(
+						'h3',
+						null,
+						'Your task'
+					),
 					this.renderTitle(),
 					this.renderDescriptionArea(),
 					_react2['default'].createElement(_testCase2['default'], {
 						testCaseList: this.state.testCaseList
 					}),
+					_react2['default'].createElement('br', null),
 					_react2['default'].createElement(
 						'button',
 						{ onClick: function () {
 								return _this.onSubmitClick();
 							} },
-						'ClickMe'
+						'Submit'
 					)
 				);
 			}
@@ -285,11 +291,11 @@
 					{ className: 'row' },
 					_react2['default'].createElement(
 						'label',
-						{ className: 'col-md-4' },
+						{ className: 'col-md-2' },
 						'Title: '
 					),
 					_react2['default'].createElement('input', {
-						className: 'col-md-8',
+						className: 'col-md-9',
 						value: title,
 						onChange: this.handleTitleChange
 					})
@@ -305,11 +311,11 @@
 					{ className: 'row' },
 					_react2['default'].createElement(
 						'label',
-						{ className: 'col-md-4' },
+						{ className: 'col-md-2' },
 						'Description: '
 					),
 					_react2['default'].createElement('textarea', {
-						className: 'col-md-8',
+						className: 'col-md-9',
 						rows: '6',
 						value: description,
 						onChange: this.handleDescriptionChange
@@ -372,6 +378,7 @@
 			this.updateTestCaseField = this.updateTestCaseField.bind(this);
 			this.updateTestCaseArgument = this.updateTestCaseArgument.bind(this);
 			this.addTestCaseArgument = this.addTestCaseArgument.bind(this);
+			this.removeTestCaseArgument = this.removeTestCaseArgument.bind(this);
 		}
 
 		_createClass(TestCase, [{
@@ -379,9 +386,9 @@
 			value: function render() {
 				return _react2["default"].createElement(
 					"div",
-					{ className: "tests-case-area" },
+					{ className: "tests-case-area row" },
 					_react2["default"].createElement(
-						"label",
+						"h3",
 						null,
 						"Test cases"
 					),
@@ -443,7 +450,7 @@
 								_react2["default"].createElement(
 									"th",
 									{ scope: "row" },
-									index
+									index + 1
 								),
 								_react2["default"].createElement(
 									"td",
@@ -464,6 +471,8 @@
 									"td",
 									null,
 									_react2["default"].createElement("input", {
+										type: "number",
+										style: { maxWidth: '55px' },
 										value: testCase.score,
 										onChange: function (e) {
 											return _this.updateTestCaseField(testCase, e.target.value, 'score');
@@ -486,7 +495,7 @@
 									_react2["default"].createElement(
 										"button",
 										{
-											className: "btn",
+											className: "btn btn-link",
 											onClick: function () {
 												return _this.removeTestCase(index);
 											}
@@ -521,22 +530,23 @@
 
 				return _react2["default"].createElement(
 					"div",
-					{ className: "test-case-arguments", style: { display: 'inline-block' } },
+					{ className: "test-case-arguments no-padding" },
 					testCase.arguments.map(function (arg, index) {
 						return _react2["default"].createElement(
 							"div",
-							{ className: "test-case-argument" },
+							{ className: "test-case-argument no-padding" },
 							_react2["default"].createElement("input", { value: arg,
 								onChange: function (e) {
 									return _this3.updateTestCaseArgument(testCase, index, e.target.value);
 								}
-							})
+							}),
+							_this3.renderRemoveArgumentButton(testCase, index)
 						);
 					}),
 					_react2["default"].createElement(
 						"button",
 						{
-							className: "add-test-case-argument btn",
+							className: "add-test-case-argument btn btn-link",
 							onClick: function () {
 								return _this3.addTestCaseArgument(testCase);
 							} },
@@ -545,9 +555,29 @@
 				);
 			}
 		}, {
+			key: "renderRemoveArgumentButton",
+			value: function renderRemoveArgumentButton(testCase, index) {
+				var _this4 = this;
+
+				if (testCase.arguments.length < 2) {
+					return null;
+				}
+				return _react2["default"].createElement(
+					"button",
+					{
+						className: "btn btn-link",
+						onClick: function () {
+							return _this4.removeTestCaseArgument(testCase, index);
+						}
+					},
+					"Remove"
+				);
+			}
+		}, {
 			key: "addTestCase",
 			value: function addTestCase() {
 				var newTestCase = {
+					title: '',
 					arguments: [''],
 					expectedOutput: '',
 					score: 0,
@@ -582,6 +612,12 @@
 			key: "addTestCaseArgument",
 			value: function addTestCaseArgument(testCase) {
 				testCase.arguments.push('');
+				this.forceUpdate();
+			}
+		}, {
+			key: "removeTestCaseArgument",
+			value: function removeTestCaseArgument(testCase, index) {
+				testCase.arguments.splice(index, 1);
 				this.forceUpdate();
 			}
 		}]);
