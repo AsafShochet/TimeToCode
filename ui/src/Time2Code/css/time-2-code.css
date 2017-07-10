@@ -1,7 +1,23 @@
 .instructorApp {
-	margin: 70px 10%;
+	margin: 70px 7%;
+}
+
+.no-padding {
+	padding: 0;
+}
+
+.test-case-argument {
+	margin-bottom: 10px;
 }
 
 .row {
 	margin-bottom: 10px;
+}
+
+h3 {
+	padding-bottom: 8px;
+}
+
+input {
+	padding: 5px 2px;
 }

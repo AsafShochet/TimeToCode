@@ -26,12 +26,14 @@ class InstructorApp extends React.Component {
 	render() {
 		return (
 			<div className="instructorApp">
+				<h3>Your task</h3>
 				{this.renderTitle()}
 				{this.renderDescriptionArea()}
 				<TestCase
 					testCaseList={this.state.testCaseList}
 				/>
-				<button onClick={() => this.onSubmitClick()}>ClickMe</button>
+				<br/>
+				<button onClick={() => this.onSubmitClick()}>Submit</button>
 			</div>
 		);
 	};
@@ -40,9 +42,9 @@ class InstructorApp extends React.Component {
 		const { title } = this.state;
 		return (
 			<div className="row">
-				<label className="col-md-4">Title: </label>
+				<label className="col-md-2">Title: </label>
 				<input
-					className="col-md-8"
+					className="col-md-9"
 					value={title}
 					onChange={this.handleTitleChange}
 				/>
@@ -54,9 +56,9 @@ class InstructorApp extends React.Component {
 		const { description } = this.state;
 		return (
 			<div className="row">
-				<label className="col-md-4">Description: </label>
+				<label className="col-md-2">Description: </label>
 				<textarea
-					className="col-md-8"
+					className="col-md-9"
 					rows="6"
 					value={description}
 					onChange={this.handleDescriptionChange}
