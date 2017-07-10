@@ -1,7 +1,6 @@
 ui/node_modules/
 ui/lib/main.js
 .idea/
-server/uploads/
 /.idea/misc.xml
 /.idea/modules.xml
 /.idea/TimeToCode.iml

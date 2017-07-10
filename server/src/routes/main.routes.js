@@ -2,14 +2,13 @@
 import express from 'express';
 import questionsService from '../service/questions.service';
 import answersService from '../service/answers.service';
+var path = require('path');
 
 const router = express.Router();
 
 // Arrow functions
-router.get('/', (req, res) => {
-	res.send({message: 'Hello World!!'});
-});
-
+console.log(path.join(__dirname, '../../../ui'));
+router.use('/', express.static(path.join(__dirname, '../../../ui')));
 
 /**
  * adding a question to the list
@@ -33,7 +32,7 @@ router.get('/questions', (req, res) => {
 
 /**
  * recieves a file with student's solution, and data about the answer
- * returns the answer Id to ask for
+ * returns the answer results
  */
 router.post('/answers', (req, res) => {
 	let body = req.body;
@@ -41,9 +40,8 @@ router.post('/answers', (req, res) => {
 	let answerId = answersService.uuidv4();
 	body.answerId = answerId;
 	extractTextFileFromForm(req)
-		.then((fileContent) => answersService.saveAnswer(fileContent, body));
-
-	res.send({"answerId": answerId});
+		.then((fileContent) => answersService.saveAnswer(fileContent, body))
+		.then((result) => res.send(result));
 });
 
 router.get('/answers', (req, res) => {

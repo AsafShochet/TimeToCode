@@ -7,15 +7,11 @@ class LintService {
 	runLint(fileContent, lintConfig) {
 		return new Promise((resolve, reject) => {
 			// running eslint here
-			let styleReport = {
-				'commentsPerLine': {
-					status: 'pass'
-				},
-				'meaningfullNames': {
-					status: "failed",
-					text: 'It is a bad practice to use variables named x1, x2, x3'
-				}
-			};
+			let styleReport = [
+				{name: 'Has documentation', value: true},
+				{name: 'Has correct tabs', value: false},
+				{name: 'Has long lines', value: true}
+			];
 			resolve(styleReport);
 		});
 	}

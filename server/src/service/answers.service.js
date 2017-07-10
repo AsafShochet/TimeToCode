@@ -21,6 +21,7 @@ class AnswersService {
 	 */
 	saveAnswer(fileContent, answer) {
 
+		return new Promise((resolve, reject) => {
 		console.log('fileContent', fileContent);
 		console.log('answer object', JSON.stringify(answer));
 
@@ -35,15 +36,15 @@ class AnswersService {
 
 				answerAnalysis.answerId = answer.id;
 				answerAnalysis.studentId = answer.studentId;
-				
+
 				dbConnector.saveAnswer(answerAnalysis);
+				resolve(answerAnalysis);
 			})
 			.catch((error) => {
 				console.error("something went wrong...", error);
 			});
-
-		return randId;
-	}
+		});
+	};
 
 	uuidv4() {
 		return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
