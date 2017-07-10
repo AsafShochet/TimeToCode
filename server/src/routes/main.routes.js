@@ -45,6 +45,46 @@ router.get('/answers', (req, res) => {
 	res.send(answers);
 });
 
+router.post('/upload', (req, res) => {
+	console.log('upload starting');
+	const formidable = require('formidable');
+	const path = require('path');
+	const uploadDir = path.join(__dirname, '../','../','/uploads/'); //i made this  before the function because i use it multiple times for deleting later
+
+	let savedPath;
+	var form = new formidable.IncomingForm();
+	form.multiples = true;
+	form.keepExtensions = true;
+	form.uploadDir = uploadDir;
+	form.parse(req, (err, fields, files) => {
+
+		if (err) {
+			console.error('upload error', err);
+			return res.status(500).json({error: err})
+		}
+		console.log('upload success!!');
+	});
+	form.on('fileBegin', function (name, file) {
+		console.log('fileBegin started!!');
+		const [fileName, fileExt] = file.name.split('.');
+		file.path = path.join(uploadDir, `${fileName}_${new Date().getTime()}.${fileExt}`);
+		savedPath = file.path;
+	});
+
+	form.on('end', function(err, success) {
+		var fs = require('fs');
+		console.log("savedPath", savedPath);
+		fs.readFile(savedPath, function(err, data) {
+			console.log(data);
+			if (err) {
+				console.error(err);
+			}
+			res.status(200).json({uploaded: data});
+		});
+
+	})
+});
+
 
 // Exporting an object as the default import for this module
 export default router;
