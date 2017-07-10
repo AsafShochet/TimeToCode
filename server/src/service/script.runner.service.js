@@ -18,6 +18,7 @@ class ScriptRunnerService {
 
 				var Sandbox = require('sandbox'); // a clear environment to run the code, using http://gf3.github.io/sandbox/
 				var sb = new Sandbox();
+				console.log("script", script);
 				if (!script.endsWith(";")) { // making sure script ends with ;
 					script += ";";
 				}
@@ -46,6 +47,7 @@ class ScriptRunnerService {
 
 					numberOfCasesDone++;
 					if (numberOfCasesDone == numberOfCases) {
+						console.log("numberOfCasesDone == numberOfCases", numberOfCasesDone == numberOfCases);
 						resolve(testCasesResults);
 					}
 				})

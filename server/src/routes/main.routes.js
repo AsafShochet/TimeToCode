@@ -50,6 +50,7 @@ router.get('/answers', (req, res) => {
 	let body = req.body;
 	console.log('get answers body: ' + body);
 	let answers = answersService.getAnswers();
+	console.log('answers response: ' + answers);
 	res.send(answers);
 });
 
@@ -84,9 +85,8 @@ var extractTextFileFromForm = function (req) {
 		form.on('end', function (err, success) {
 			var fs = require('fs');
 			console.log("savedPath #2", savedPath);
-			fs.readFile(savedPath, function (err, data) {
-				console.log(data);
-				console.log(data);
+			fs.readFile(savedPath, "utf8", function (err, data) {
+				console.info("data: ---> ", data);
 				if (err) {
 					console.error(err);
 					reject({"error": err});

@@ -1,7 +1,7 @@
 {
   "title": "Adding numbers",
   "instructions" : "Create a method that sums up 3 numbers (positive, negative, zero). Make sure to make the method name 'run'",
-  "testCases": [ //mockup!
+  "testCases": [
     {
       "id": "AAAASS-XASD",
       "input": "1,2,3",

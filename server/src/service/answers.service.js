@@ -33,16 +33,10 @@ class AnswersService {
 		this.checkAnswerBasedOnFileContent(fileContent, question)
 			.then((answerAnalysis) => {
 
-				let answerToSave = {
-					answerId: answer.answerId,
-					studentId: answer.studentId,
-					fullText: answerAnalysis.fileContent,
-					checkingResults: answerAnalysis.checkingResults,
-					stylingResult: answerAnalysis.stylingResult,
-					copiedFromResult: answerAnalysis.copiedFromResult
-				};
-
-				dbConnector.saveAnswer(answerToSave);
+				answerAnalysis.answerId = answer.id;
+				answerAnalysis.studentId = answer.studentId;
+				
+				dbConnector.saveAnswer(answerAnalysis);
 			})
 			.catch((error) => {
 				console.error("something went wrong...", error);
@@ -59,21 +53,24 @@ class AnswersService {
 	}
 
 	checkAnswerBasedOnFileContent(fileContent, question) {
-		let answerAnalysis = {};
-		console.log(fileContent);
-		answerAnalysis.fileContent = fileContent;
 		return new Promise((resolve, reject) => {
-			scriptRunnerService.run(question.testCases, fileContent)
+			let answerAnalysis = {};
+			console.log(fileContent);
+			answerAnalysis.fileContent = fileContent;
+			scriptRunnerService.run(question.testCases, fileContent.content)
 				.then((testCaseResult) => answerAnalysis.testCaseResult = testCaseResult)
-				.then(() => lintService.runLint(fileContent, question.styleRules))
+				.then(() => lintService.runLint(fileContent.content, question.styleRules))
 				.then((styleResults) => answerAnalysis.styleResults = styleResults)
-				.then(() => sourceCheckingService.runSourceCheck(fileContent, question.sourcesToCheck))
-				.then((copiedFromResult) => answerAnalysis.copiedFromResult = copiedFromResult)
-				.then(() => resolve(answerAnalysis))
+				.then(() => sourceCheckingService.runSourceCheck(fileContent.content, question.sourcesToCheck))
+				.then((sourceCheckResult) => answerAnalysis.sourceCheckResult = sourceCheckResult)
+				.then(() => {
+					console.log("answerAnalysis", answerAnalysis);
+					resolve(answerAnalysis);
+				})
 				.catch((err) => {
 					console.error("error on result analysis!!", err);
 				});
-		})
+		});
 	}
 }
 
