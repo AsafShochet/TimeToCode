@@ -28,7 +28,7 @@ class AnswersService {
 		// get data regarding the question to test
 		let questionId = answer.questionId;
 		console.log('questionId', questionId);
-		let question = questionService.getQuestion(questionId);
+		let question = questionService.getQuestion();
 		console.log("question", JSON.stringify(question));
 
 		this.checkAnswerBasedOnFileContent(fileContent, question)

@@ -15,8 +15,8 @@ class QuestionsService {
 		return dbConnector.getQuestions();
 	}
 
-	getQuestion(questionId) {
-		return dbConnector.getQuestion(questionId);
+	getQuestion() {
+		return dbConnector.getQuestion();
 	}
 
 	uuidv4() {

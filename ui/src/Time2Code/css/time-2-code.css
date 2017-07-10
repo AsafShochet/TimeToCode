@@ -16,7 +16,20 @@ body {
 	font-weight: 400
 }
 
-.instructorApp {
+.table>tbody>tr>td {
+	color: #fff;
+	font-weight: 400;
+}
+
+.table>tbody>tr.row-success>td {
+	color: #00bf00;
+}
+
+.table>tbody>tr.row-error>td {
+	color: red;
+}
+
+.instructorApp, .learnerApp {
 	padding: 54px 7%;
 }
 

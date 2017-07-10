@@ -6,26 +6,34 @@ class LearnerApp extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			title: "sorting algorithms",
-			file: ''
-		}
+			question: {},
+			answerStatus: null,
+			file: '',
+			listResultListToView: []
+		};
+		this.handleFileUpload = this.handleFileUpload.bind(this);
 	}
 
-	onSubmitClick({title, description, testCases, lintSettings, copyFromCheck}) {
-		return restService.setNewQuestion({title, description, testCases, lintSettings, copyFromCheck});
-	};
+	componentWillMount() {
+		restService.getFirstQuestion()
+			.then((question) => {
+				this.setState({question: question});
+			})
+			.catch(err=>console.log('error', err));
+	}
 
 	render() {
-		const {title} = this.state;
-		const {description} = this.state;
-		const {answerStatus} = this.state;
+		const {question, answerStatus} = this.state;
+		if (Object.keys(question).length === 0) {
+			return null;
+		}
+		const {title, instructions} = question;
+
 		return (
-			<div className="learnerApp container">
-				<img src="../img/toolbar-mock.jpeg"/>
-				<br />
-				<br />
+			<div className="learnerApp">
+				<h3 className="row">Your task</h3>
 				{this.renderTitle(title)}
-				{this.renderDescriptionArea(description)}
+				{this.renderDescriptionArea(instructions)}
 				{this.renderUploadButton()}
 				{this.renderResultsArea(answerStatus)}
 
@@ -61,13 +69,13 @@ class LearnerApp extends Component {
 	};
 
 
-	_handleImageChange(e) {
-		console.log("_handleImageChange", e);
+	handleFileUpload(e) {
+		console.log("handleFileUpload", e);
 		e.preventDefault();
 
 		let reader = new FileReader();
 		let file = e.target.files[0];
-		console.log("_handleImageChange", e);
+		console.log("handleFileUpload", e);
 
 		restService.uploadImage(file)
 			.then((response) => {
@@ -81,8 +89,11 @@ class LearnerApp extends Component {
 
 	renderUploadButton() {
 		return (
-			<div className="row">
-				<input type="file" className="btn-primary btn" value="Upload" onChange={this._handleImageChange}/>
+			<div>
+				<h3 className="row">Upload assignment</h3>
+				<div className="row">
+					<input type="file" className="btn-primary btn" onChange={this.handleFileUpload}/>
+				</div>
 			</div>
 		);
 	}
@@ -91,37 +102,65 @@ class LearnerApp extends Component {
 		if (!answerStatus) {
 			return;
 		}
-		let styleResults = answerStatus.styleReport;
-		let testCaseResult = answerStatus.testCaseResult;
-		let sourceCheckResult = answerStatus.sourceCheckResult;
+		const {testCaseResult, styleResults, sourceCheckResult} = answerStatus;
+
+		let score = 0;
+		for (const index in testCaseResult) {
+			score += parseInt(testCaseResult[index].score, 10);
+		}
+
 
 		return (
-			<div className="results"> Results
-				<div className="totalScore">85</div>
-				<div className="testCases">
-					{this.renderTestCasesView(testCaseResult)}
-				</div>
+			<div className="results">
+				<h3 className="row">Results</h3>
+				<div className="totalScore">{score}</div>
+				{this.renderTestCasesView(testCaseResult)}
 				{this.renderLintView(styleResults)}
 				{this.renderSourceCheckResult(sourceCheckResult)}
 			</div>
 		)
 	}
 
-	renderTestCasesView() {
-		return null;
+	renderTestCasesView(testCaseResults) {
+		let results = testCaseResults.map(result => {
+			let className = result.passed ? "row-success" : "row-error";
+			return (<tr className={className}>
+					<td>{result.comment}</td>
+					<td>{result.passed ? "Pass" : "Failed"}</td>
+					<td>{result.score}</td>
+				</tr>
+			)
+		});
+		return (
+			<div className="lint">
+				<h3 className="row">Test cases</h3>
+				<table className="table table-striped">
+					<thead>
+					<th>Name</th>
+					<th>Status</th>
+					<th>Score</th>
+					</thead>
+					<tbody>
+					{results}
+					</tbody>
+				</table>
+			</div>
+		);
 	}
 
 	renderLintView(lintResults) {
 		let results = lintResults.map(result => {
-			let className = result.value ? "table-success" : "table-danger";
+			let className = result.value ? "row-success" : "row-error";
 			return (<tr className={className}>
-				<td>{result.name}</td>
-				<td>{result.value ? "Pass" : "Failed"}</td>
-			</tr>)
+					<td>{result.name}</td>
+					<td>{result.value ? "Pass" : "Failed"}</td>
+				</tr>
+			)
 		});
 		return (
 			<div className="lint">
-				<table className="table table-bordered">
+				<h3 className="row">Code style analysis</h3>
+				<table className="table table-striped">
 					<thead>
 					<th>Category</th>
 					<th>Result</th>
@@ -136,16 +175,17 @@ class LearnerApp extends Component {
 
 	renderSourceCheckResult(sourceCheckResult) {
 		let results = sourceCheckResult.map(result => {
-			let className = result.value ? "table-success" : "table-danger";
+			let className = result.value ? "row-success" : "row-error";
 			return (<tr className={"sourceCheckTable "+className}>
 				<td>{result.name}</td>
 				<td>{result.value ? "Pass" : "Failed"}</td>
-				<td>{result.comment}</td>
+				<td>{result.message}</td>
 			</tr>)
 		});
 		return (
 			<div className="lint">
-				<table className="table table-bordered">
+				<h3 className="row">Source code traces</h3>
+				<table className="table table-striped">
 					<thead>
 					<th>Source</th>
 					<th>Result</th>

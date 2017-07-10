@@ -29,15 +29,12 @@ class DbConnector {
 		return this._questions;
 	}
 
-	getQuestion(questionId) {
+	getQuestion() {
 		let all = this.getQuestions();
-		all.forEach(function (question) {
-			if (question.id == questionId) {
-				console.log("question with id " + questionId + " found!!");
-				return question;
-			}
-		});
-		console.log("question with id " + questionId + " not found, returning the mockup");
+		if (all && all.length > 0) {
+			return all[0];
+		};
+
 		return {
 			"title": "Adding numbers",
 			"instructions" : "Create a method that sums up 3 numbers (positive, negative, zero). Make sure to make the method name 'run'",

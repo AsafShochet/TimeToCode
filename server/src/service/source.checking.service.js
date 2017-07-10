@@ -7,9 +7,9 @@ class SourceCheckingService {
 	runSourceCheck(fileContent, sourceCheckingConfig) {
 		return new Promise((resolve, reject) => {
 			let copiedFromResult = [
-				{name: 'Previous assignments', value: false},
-				{name: 'StackOverflow', value: true, message: "partially copied from question: 'https://stackoverflow.com/questions/20035101/no-access-control-allow-origin-header-is-present-on-the-requested-resource'"},
-				{name: 'Google', value: false}
+				{name: 'Previous assignments', value: true},
+				{name: 'StackOverflow', value: false, message: "partially copied from question: 'https://stackoverflow.com/questions/20035101"},
+				{name: 'Google', value: true}
 			];
 			resolve(copiedFromResult);
 		});

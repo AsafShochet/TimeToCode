@@ -13,8 +13,11 @@ class ScriptRunnerService {
 
 			testCases.forEach(function (testCase) {
 				let id = testCase.id;
-				let input = testCase.input;
-				let expectedOutput = testCase.output;
+				console.log("JSON.stringify(testCase)", JSON.stringify(testCase));
+				let input = testCase.arguments.join(',');
+				console.log('----- input', input);
+				let expectedOutput = testCase.expectedOutput;
+				console.log('----- expectedOutput', expectedOutput);
 
 				var Sandbox = require('sandbox'); // a clear environment to run the code, using http://gf3.github.io/sandbox/
 				var sb = new Sandbox();
@@ -27,7 +30,9 @@ class ScriptRunnerService {
 					console.log('input: ', input, 'output: ', output);
 					console.log("result: " + output.result);
 					let testResult = {
-						"id": id
+						"id": id,
+						"score": testCase.score,
+						"comment": testCase.comment
 					};
 
 					if (output.result == expectedOutput) {
