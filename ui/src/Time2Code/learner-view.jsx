@@ -10,8 +10,17 @@ class LearnerApp extends Component{
 	render() {
 		return (
 			<div className="learnerApp">
-				<h1>INs Yo</h1>
-				<button onClick={() => this.onSubmitClick({title:'WOW'})}>ClickMe</button>
+				<div className="title">title</div>
+				<div className="description">description</div>
+
+				<div className="upload">upload here</div>
+
+				<div className="results">
+					<div className="totalScore"></div>
+					<div className="testCases"></div>
+					<div className="lint"></div>
+					<div className="sourceCheck"></div>
+				</div>
 			</div>
 		);
 	}
