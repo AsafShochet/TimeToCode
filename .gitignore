@@ -1,4 +1,7 @@
 ui/node_modules/
+ui/lib/main.js
+.idea/
+server/uploads/
 /.idea/misc.xml
 /.idea/modules.xml
 /.idea/TimeToCode.iml
@@ -9,7 +12,6 @@ ui/node_modules/
 /ui/.idea/modules.xml
 /ui/.idea/ui.iml
 /ui/.idea/workspace.xml
-/.gitignore
 /ui/lib/main.js
 /ui/lib/main.js
 /ui/lib/main.js
