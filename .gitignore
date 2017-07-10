@@ -1,1 +1,12 @@
 ui/node_modules/
+/.idea/misc.xml
+/.idea/modules.xml
+/.idea/TimeToCode.iml
+/.idea/vcs.xml
+/.idea/workspace.xml
+/ui/.gitignore
+/ui/.idea/misc.xml
+/ui/.idea/modules.xml
+/ui/.idea/ui.iml
+/ui/.idea/workspace.xml
+/.gitignore
