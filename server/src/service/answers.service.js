@@ -19,21 +19,22 @@ class AnswersService {
 	 * @param file
 	 * @returns {*}
 	 */
-	saveAnswer(answer, file) {
+	saveAnswer(fileContent, answer) {
+
+		console.log('fileContent', fileContent);
+		console.log('answer object', JSON.stringify(answer));
 
 		// get data regarding the question to test
 		let questionId = answer.questionId;
+		console.log('questionId', questionId);
 		let question = questionService.getQuestion(questionId);
 		console.log("question", JSON.stringify(question));
 
-		// generate Id
-		let randId = this.uuidv4();
-		// read file content
-		this.readFile(file)
-			.then((fileContent) => this.checkAnswerBasedOnFileContent(fileContent, question))
+		this.checkAnswerBasedOnFileContent(fileContent, question)
 			.then((answerAnalysis) => {
 
 				let answerToSave = {
+					answerId: answer.answerId,
 					studentId: answer.studentId,
 					fullText: answerAnalysis.fileContent,
 					checkingResults: answerAnalysis.checkingResults,
@@ -41,23 +42,13 @@ class AnswersService {
 					copiedFromResult: answerAnalysis.copiedFromResult
 				};
 
-				answerToSave.id = randId;
 				dbConnector.saveAnswer(answerToSave);
-
 			})
 			.catch((error) => {
 				console.error("something went wrong...", error);
 			});
 
 		return randId;
-	}
-
-	readFile(file) {
-		return new Promise((resolve, reject) => {
-			let text = 'function run(input1, input2, input3) { return input1+input2+input3;};';
-			console.log('read text from file: ' + text);
-			resolve(text);
-		});
 	}
 
 	uuidv4() {

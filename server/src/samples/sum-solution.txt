@@ -1,0 +1,1 @@
+function run(input1, input2, input3) { return input1+input2+input3;};

@@ -15,7 +15,7 @@ npm start
 node_modules/nodemon/bin/nodemon.js -- node_modules/babel/bin/babel-node.js src/server.js
 
 # open in browser
-http://localhost:3000
+http://localhost:3030
 
 # build for production (output to dist folder)
 npm run build

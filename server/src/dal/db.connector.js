@@ -7,7 +7,6 @@ class DbConnector {
 	constructor() {
 		this._answers = [];
 		this._questions = [];
-
 	}
 
 	saveAnswer(answer) {
@@ -39,14 +38,31 @@ class DbConnector {
 			}
 		});
 		console.log("question with id " + questionId + " not found, returning the mockup");
-		return 	{
-		 "testCases" :	[ //mockup!
+		return {
+			"title": "Adding numbers",
+			"instructions" : "Create a method that sums up 3 numbers (positive, negative, zero). Make sure to make the method name 'run'",
+			"testCases": [ //mockup!
 				{
 					"id": "AAAASS-XASD",
 					"input": "1,2,3",
-					"output": 6
+					"output": 6,
+					"score": 15
+				},
+				{
+					"id": "AAAASS-SSSSSSSS",
+					"input": "-1,-1,2",
+					"output": 0,
+					"score": 15
 				}
-			]
+			],
+			"styling": {
+				"commentsPerLine": 1,
+				"meaningfulNames" : true
+			},
+			"sourceChecking": {
+				"google" : 80,
+				"internal": 60
+			}
 		}
 	}
 }

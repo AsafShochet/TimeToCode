@@ -31,10 +31,18 @@ router.get('/questions', (req, res) => {
 	res.send(questions);
 });
 
+/**
+ * recieves a file with student's solution, and data about the answer
+ * returns the answer Id to ask for
+ */
 router.post('/answers', (req, res) => {
 	let body = req.body;
 	console.log('save answers body: ' + body);
-	let answerId = answersService.saveAnswer(body, {});
+	let answerId = answersService.uuidv4();
+	body.answerId = answerId;
+	extractTextFileFromForm(req)
+		.then((fileContent) => answersService.saveAnswer(fileContent, body));
+
 	res.send({"answerId": answerId});
 });
 
@@ -45,46 +53,52 @@ router.get('/answers', (req, res) => {
 	res.send(answers);
 });
 
-router.post('/upload', (req, res) => {
-	console.log('upload starting');
-	const formidable = require('formidable');
-	const path = require('path');
-	const uploadDir = path.join(__dirname, '../','../','/uploads/'); //i made this  before the function because i use it multiple times for deleting later
+var extractTextFileFromForm = function (req) {
+	return new Promise((resolve, reject) => {
+		console.log('upload starting');
+		const formidable = require('formidable');
+		const path = require('path');
+		const uploadDir = path.join(__dirname, '../', '../', '/uploads/'); //i made this  before the function because i use it multiple times for deleting later
 
-	let savedPath;
-	var form = new formidable.IncomingForm();
-	form.multiples = true;
-	form.keepExtensions = true;
-	form.uploadDir = uploadDir;
-	form.parse(req, (err, fields, files) => {
-
-		if (err) {
-			console.error('upload error', err);
-			return res.status(500).json({error: err})
-		}
-		console.log('upload success!!');
-	});
-	form.on('fileBegin', function (name, file) {
-		console.log('fileBegin started!!');
-		const [fileName, fileExt] = file.name.split('.');
-		file.path = path.join(uploadDir, `${fileName}_${new Date().getTime()}.${fileExt}`);
-		savedPath = file.path;
-	});
-
-	form.on('end', function(err, success) {
-		var fs = require('fs');
-		console.log("savedPath", savedPath);
-		fs.readFile(savedPath, function(err, data) {
-			console.log(data);
+		let savedPath;
+		var form = new formidable.IncomingForm();
+		form.multiples = true;
+		form.keepExtensions = true;
+		form.uploadDir = uploadDir;
+		form.parse(req, (err, fields, files) => {
 			if (err) {
-				console.error(err);
+				console.error('upload error', err);
+				reject({"error": err});
 			}
-			res.status(200).json({uploaded: data});
+			console.log('upload success!!');
 		});
 
-	})
-});
+		form.on('fileBegin', function (name, file) {
+			console.log('fileBegin started!!');
+			const [fileName, fileExt] = file.name.split('.');
+			file.path = path.join(uploadDir, `${fileName}_${new Date().getTime()}.${fileExt}`);
+			savedPath = file.path;
+			console.log("savedPath #1", savedPath);
+		});
 
+		form.on('end', function (err, success) {
+			var fs = require('fs');
+			console.log("savedPath #2", savedPath);
+			fs.readFile(savedPath, function (err, data) {
+				console.log(data);
+				console.log(data);
+				if (err) {
+					console.error(err);
+					reject({"error": err});
+				}
+				resolve({
+					"content": data,
+					"path": savedPath
+				})
+			});
+		});
+	});
+};
 
 // Exporting an object as the default import for this module
 export default router;

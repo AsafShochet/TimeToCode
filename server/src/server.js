@@ -10,7 +10,7 @@ app.use(bodyParser.json())
 app.use('/', routes);
 
 // arrow functions
-const server = app.listen(3000, () => {
+const server = app.listen(3030, () => {
 	// destructuring
   const {address, port} = server.address();
 
